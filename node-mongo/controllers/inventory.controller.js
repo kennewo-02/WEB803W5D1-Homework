@@ -37,17 +37,18 @@ exports.getInventory = (req,res) =>{
     });
 };
 exports.inventories = (req,res) => {
-        Inventory.find().select('-__v').then(inventoryInfos => {
+    Inventory.find().select('-__v')
+    .then(inventoryInfos => {
         res.status(200).json(inventoryInfos);
     }).catch(err => {
-        // log on console
-        console.log(err);
+        console.error("Inventory fetch error:", err); // full error in server console
         res.status(500).json({
             message:"Error!",
-            error: err
+            error: err.message  // <-- send message, not object
         });
     });
 };
+
 exports.deleteInventory = (req, res) =>{
     Inventory.findByIdAndRemove(req.params.id).select('-__v-_id')
        .then(inventory => {

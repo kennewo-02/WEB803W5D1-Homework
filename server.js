@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
-require('./node-mongo/models/inventory.model.js');
 
 //configure the database
 require('dotenv').config();
@@ -14,20 +13,14 @@ mongoose.connect(process.env.DATABASE)
     .then(() => console.log('Mongoose connection open'))
     .catch(err => console.log(`Connection error: ${err.message}`));
 
-
-mongoose.connection
-.on('open', () => {
-    console.log('Mongoose connection open');
-})
-.on('error', (err) => {
-    console.log(`Connection error: ${err.message}`);
-});
+require('./node-mongo/models/inventory.model.js');
 
 require('./node-mongo/routes/inventory.router.js')(app);
-//Create a Server
-const server = app.listen(8080, function () {
-    const host = server.address().address
-    const port =server.address().port
 
-    console.log("App listening at http://%s:%s", host, port)
-})
+// Create a Server
+const PORT = 8080;
+const HOST = 'localhost';
+
+const server = app.listen(PORT, HOST, () => {
+    console.log(`App listening at http://${HOST}:${PORT}`);
+});
